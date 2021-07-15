@@ -1,0 +1,23 @@
+; This zone file exists purely so that we can use NSEC3 on this zone
+; but NSEC on the parent zone.
+;
+; See also: https://www.netmeister.org/blog/dns-rrs.html
+;
+; This file is in the public domain.
+;
+; -Jan Schaumann <jschauma@netmeister.org> / @jschauma
+;
+; https://github.com/jschauma/dns-rrs
+
+$TTL	3600
+@	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
+				2021071406	; Serial
+				3600		; Refresh
+				300		; Retry
+				3600000		; Expire
+				3600 )		; Minimum
+	IN	NS	panix.netmeister.org.
+	IN	TXT	"Format: <8-bit hash algorithm> <8-bit flags> <16-bits iterations> <8-bit salt length> <24-bit salt> <8-bit hash-length> <24-bit next hashed owner name> <16-bit type bit map>"
+	IN	TXT	"Next secure record, v3, to prove authenticated denial of existence. RFC5155  (2008)"
+
+next	IN	TXT	"A text record so that we can show the use of NSEC3."

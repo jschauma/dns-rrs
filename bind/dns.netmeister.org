@@ -1,0 +1,660 @@
+; This zone file contains example entries for all defined DNS Resource Records.
+; That is, for each RR <rr>, there exists an RR of type <rr> under
+; <rr>.dns.netmeister.org.
+; In addition, each RR has an accompanying TXT record summarizing the
+; purpose of the RR as well as which RFC the record was defined in
+; (earliest and latest), and a TXT record providing the format of the RDATA
+; in question.
+;
+; This allows you to look up any given RR type and retrieve an
+; example via the common host lookup tools:
+;   host -t a a.dns.netmeister.org
+;   dig aaaa aaaa.dns.netmeister.org +short
+;   nslookup -query=cname cname.dns.netmeister.org
+;
+; Since this zone is DNSSEC signed and uses NSEC instead of NSEC3, you can
+; easily walk the entire zone.
+;
+; Note: not all of the values (RDATA) of these RRs necessarily is
+; meaningful, correct, or make sense.  They are, however, valid.
+;
+; Your client may not support all RRs.  If you do not get a response
+; (or not the response you expected), try performing an ANY lookup.
+;
+; See also: https://www.netmeister.org/blog/dns-rrs.html
+;
+; This file is in the public domain.
+;
+; -Jan Schaumann <jschauma@netmeister.org> / @jschauma
+;
+; https://github.com/jschauma/dns-rrs
+
+$TTL	3600
+@	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
+				2021071503	; Serial
+				3600		; Refresh
+				300		; Retry
+				3600000		; Expire
+				3600 )		; Minimum
+	IN	NS	panix.netmeister.org.
+	IN	TXT	"This zone has example entries for all defined DNS Resource Records. See also: https://www.netmeister.org/blog/dns-rrs.html"
+
+*	IN	TXT	"Wildcard record matching any names _not_ in the zone."
+
+a	IN	A	166.84.7.99
+	IN	TXT	"Format: a single dotted decimal quad IPv4 address"
+	IN	TXT	"A 32-bit IPv4 host address. RFC882 (1983); RFC1035 (1987)"
+
+aaaa	IN	AAAA	2001:470:30:84:e276:63ff:fe72:3900
+	IN	TXT	"Format: single a hexadecimal IPv6 address"
+	IN	TXT	"A 128-bit IPv6 host address. RFC1884 (1995); RFC4291 (2006)"
+
+afsdb	IN	AFSDB	1 panix.netmeister.org.
+	IN	TXT	"Format: <16-bit subtype> <domain-name>"
+	IN	TXT	"Location of a database server of an Andrew File System (AFS) cell. RFC1183 (1990)"
+
+any	IN	TXT	"Pseudo-RR QTYPE value 255 ('*'). Returns all records. RFC1035 (1987)"
+
+apl	IN	APL	1:192.168.32.0/21 !1:192.168.38.0/28 2:2001:db8::/32 !2:2001:0470:0030:0084::/64
+	IN	TXT	"Format: {[!]afi:address/prefix}* -- whitespace separated strings; an optional '!', a numerical address family indicator, ':', an address prefix in CIDR notation"
+	IN	TXT	"Address Prefix List. RFC3123 (2001)"
+
+axfr	IN	TXT	"Pseudo-RR: Authoritative Zone Transfer. RFC1035 (1987)"
+
+caa	IN	CAA	0 issue ";"
+	IN	CAA	0 issuewild ";"
+	IN	CAA	0 iodef "mailto:abuse@netmeister.org"
+	IN	TXT	"Format: <flags> <tag> <value> -- flag is commonly 1; tag one of 'issue', 'issuewild', 'iodef' (others reserved or not yet defined); value is a '<character-string>'"
+	IN	TXT	"Indication of certificate authorities authorized to issue certificates for this domain. RFC6844 (2013)"
+
+cdnskey	IN	CDNSKEY	257 3 13 JErBf5lZ1osSWg7r51+4VfEiWIdONph0L70X0ToT7DkbikKQIp+qvuOOZri7j3qVComv7tgTIBhKxeDQercdKQ==
+	IN	TXT	"Format: <16-bit flags> <8-bit protocol> <8-bit algorithm> <base64-encoded pubkey>"
+	IN	TXT	"Child Copy of DSNKEY record, for transfer to parent. RFC7344 (2014)"
+
+cds	IN	CDS	56039 13 2 4104805B43928FC573F0704A2C1B5A10BAA2878DE26B8535DDE77517C154CE9F
+	IN	TXT	"Format: <16-bit key tag> <8-bit algorithm> <8-bit digest type> <digest of owner name concatenated with the DNSKEY RDATA>"
+	IN	TXT	"Child Copy of DS record, for transfer to parent. RFC7344 (2014)"
+
+cert	IN	A	166.84.7.99
+	IN	AAAA	2001:470:30:84:e276:63ff:fe72:3900
+	IN	CERT	PKIX 12848 8 (
+				MIIFMzCCBBugAwIBAgISA5tDkCDwHTfvefYEFuzWCFaJMA0GCSqGSIb3DQEB
+				CwUAMDIxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQsw
+				CQYDVQQDEwJSMzAeFw0yMTA3MTAxMzU4NTdaFw0yMTEwMDgxMzU4NTZaMCIx
+				IDAeBgNVBAMTF2NlcnQuZG5zLm5ldG1laXN0ZXIub3JnMIIBIjANBgkqhkiG
+				9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsRUx03sAe4nYQtD/JeOUMec6XXRdoB2G
+				BcaSDHhrj0wo6IsqIezb3DEgw5VQTf7M2calzT0JYMK/qR/nMjNa8nP0uWa+
+				2MIO8q/FZSStOgJyYNrnrd94Enw6al1cyLHr+YrS1LzeH6LYUliQLaPNxh+w
+				O/VTNbUaVVjJn/GIJLSaO8X9HluzaXVQzSTQ+TpO5GzJMI4iLmNjbXC2yz+9
+				k/6JfqFqGSjEiyX8gSqoqkhA+Zaoo8jL9XRPOQ2mRzZFBvsKNKbOnqczEYsV
+				2F9qlrtdPEYRO30CRqzQSh59jHYxwA/J82UzYhR+Mb/+CyjMmFO33ejKrt7j
+				igaY2QnUDQIDAQABo4ICUTCCAk0wDgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQW
+				MBQGCCsGAQUFBwMBBggrBgEFBQcDAjAMBgNVHRMBAf8EAjAAMB0GA1UdDgQW
+				BBTP7F83NRGSnjNlvJHmBhQ86t07UDAfBgNVHSMEGDAWgBQULrMXt1hWy65Q
+				CUDmH6+dixTCxjBVBggrBgEFBQcBAQRJMEcwIQYIKwYBBQUHMAGGFWh0dHA6
+				Ly9yMy5vLmxlbmNyLm9yZzAiBggrBgEFBQcwAoYWaHR0cDovL3IzLmkubGVu
+				Y3Iub3JnLzAiBgNVHREEGzAZghdjZXJ0LmRucy5uZXRtZWlzdGVyLm9yZzBM
+				BgNVHSAERTBDMAgGBmeBDAECATA3BgsrBgEEAYLfEwEBATAoMCYGCCsGAQUF
+				BwIBFhpodHRwOi8vY3BzLmxldHNlbmNyeXB0Lm9yZzCCAQMGCisGAQQB1nkC
+				BAIEgfQEgfEA7wB1APZclC/RdzAiFFQYCDCUVo7jTRMZM7/fDC8gC8xO8WTj
+				AAABepDtu84AAAQDAEYwRAIgWuXt34lCw2aZSX1xBk2AmCw/qPkQpQFE1zzH
+				z60GIJwCIDyZTY4HAbOaPt0fCpPz1uus0GZW5dzYyXNERwnbZgupAHYAb1N2
+				rDHwMRnYmQCkURX/dxUcEdkCwQApBo2yCJo32RMAAAF6kO278gAABAMARzBF
+				AiEAi1oLYsinzNPz6XctBEUhNgOWrrxBOf9ad4Dk7IhoX24CIFT/vUVtSvf4
+				P9Kzr+rcxotNw96g+TR82Iw6iXykhFP4MA0GCSqGSIb3DQEBCwUAA4IBAQBu
+				2dw3AbDN8vwrHNdTnPMGZeT32vtDtqRSGC4/hjwUWGgkm94Nd1HvzA/vLkjI
+				K4vIqWYIR3REQEbyMJTH/eOIE0dvbvZdDgA6zjhe3TeRK2K10+b6W0X3wF0v
+				gVKLLIRYOuYXPnly2G2a2k23faDWzvpQMT2Zo6KHeATu1wxDTnZCpa0zGTRq
+				Pn+3c8v1h8A4H01lmlsCfgobtlzVvp7s2KESXJgJ1LZ1rR4Kc8Ip/V1MPPPS
+				elBFZ715492iqIJpR9iPPIhhaiMWlvDV46Fia22la0im/nvFrnQ9exW3T0Yk
+				DYGnIE8EewBAJjkBHoxg5CNK5Rj2aPAwNZvWbkXp
+			)
+	IN	CERT	IPGP 0 0 99CE1DC7770AC5A809A60DCD66CE4FE96F6BD3D7
+	IN	CERT	PGP 0 0 (
+			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
+			)
+	IN	TXT	"Format: <16-bit type> <16-bit key tag> <8-bit algorithm> <base64-encoded certificate or CRL>"
+	IN	TXT	"A certificate or certificate revocation list, including x509, S/MIME, PGP or IPSec certificates. RFC2538 (1999); RFC4398 (2006)"
+
+
+www	IN	CNAME	www.netmeister.org.
+cname	IN	CNAME	cname.dns.netmeister.org.
+; Yes, this is a loop.
+;	IN	TXT	"Format: <domain-name>"
+;	IN	TXT	"Additional records (besides DNSSEC related records) are not allowed on CNAMEs."
+cname01	IN	CNAME	cname02
+cname02	IN	CNAME	cname03
+cname03	IN	CNAME	cname04
+cname04	IN	CNAME	cname05
+cname05	IN	CNAME	cname06
+cname06	IN	CNAME	cname07
+cname07	IN	CNAME	cname08
+cname08	IN	CNAME	cname09
+cname09	IN	CNAME	cname10
+cname10	IN	CNAME	cname11
+cname11	IN	CNAME	cname12
+cname12	IN	CNAME	cname13
+cname13	IN	CNAME	cname14
+cname14	IN	CNAME	cname15
+cname15	IN	CNAME	cname16
+cname16	IN	CNAME	cname17
+cname17	IN	CNAME	cname18
+cname18	IN	CNAME	cname19
+cname19	IN	CNAME	cname20
+cname20	IN	CNAME	cname21
+cname21	IN	CNAME	cname22
+cname22	IN	CNAME	cname23
+cname23	IN	CNAME	cname24
+cname24	IN	CNAME	cname25
+cname25	IN	CNAME	cname26
+cname26	IN	CNAME	cname27
+cname27	IN	CNAME	cname28
+cname28	IN	CNAME	cname29
+cname29	IN	CNAME	cname30
+cname30	IN	CNAME	cname31
+cname31	IN	CNAME	cname32
+cname32	IN	CNAME	cname33
+cname33	IN	CNAME	cname34
+cname34	IN	CNAME	cname35
+cname35	IN	CNAME	cname36
+cname36	IN	CNAME	cname37
+cname37	IN	CNAME	cname38
+cname38	IN	CNAME	cname39
+cname39	IN	CNAME	cname40
+cname40	IN	CNAME	cname41
+cname41	IN	CNAME	cname42
+cname42	IN	CNAME	cname43
+cname43	IN	CNAME	cname44
+cname44	IN	CNAME	cname45
+cname45	IN	CNAME	cname46
+cname46	IN	CNAME	cname47
+cname47	IN	CNAME	cname48
+cname48	IN	CNAME	cname49
+cname49	IN	CNAME	cname50
+cname50	IN	CNAME	cname51
+cname51	IN	CNAME	cname52
+cname52	IN	CNAME	cname53
+cname53	IN	CNAME	cname54
+cname54	IN	CNAME	cname55
+cname55	IN	CNAME	cname56
+cname56	IN	CNAME	cname57
+cname57	IN	CNAME	cname58
+cname58	IN	CNAME	cname59
+cname59	IN	CNAME	cname60
+cname60	IN	CNAME	cname61
+cname61	IN	CNAME	cname62
+cname62	IN	CNAME	cname63
+cname63	IN	CNAME	cname64
+cname64	IN	CNAME	cname65
+cname65	IN	CNAME	cname66
+cname66	IN	CNAME	cname67
+cname67	IN	CNAME	cname68
+cname68	IN	CNAME	cname69
+cname69	IN	CNAME	cname70
+cname70	IN	CNAME	cname71
+cname71	IN	CNAME	cname72
+cname72	IN	CNAME	cname73
+cname73	IN	CNAME	cname74
+cname74	IN	CNAME	cname75
+cname75	IN	CNAME	cname76
+cname76	IN	CNAME	cname77
+cname77	IN	CNAME	cname78
+cname78	IN	CNAME	cname79
+cname79	IN	CNAME	cname80
+cname80	IN	CNAME	cname81
+cname81	IN	CNAME	cname82
+cname82	IN	CNAME	cname83
+cname83	IN	CNAME	cname84
+cname84	IN	CNAME	cname85
+cname85	IN	CNAME	cname86
+cname86	IN	CNAME	cname87
+cname87	IN	CNAME	cname88
+cname88	IN	CNAME	cname89
+cname89	IN	CNAME	cname90
+cname90	IN	CNAME	cname91
+cname91	IN	CNAME	cname92
+cname92	IN	CNAME	cname93
+cname93	IN	CNAME	cname94
+cname94	IN	CNAME	cname95
+cname95	IN	CNAME	cname96
+cname96	IN	CNAME	cname97
+cname97	IN	CNAME	cname98
+cname98	IN	CNAME	cname99
+cname99	IN	CNAME	cname
+
+
+csync	IN	CSYNC	2021071001 3 NS
+	IN	TXT	"Format: <32-bit SOA serial> <16-bit flags> <16-bit type bit map>"
+	IN	TXT	"Child-to-Parent Synchronization, commonly used for glue records. RFC7477 (2015)"
+
+dhcid	IN	DHCID	AAIBMmFjOTc1NzMyMTk0ZWE1ZTBhN2MzN2M4MzE2NTFiM2M=
+	IN	TXT	"Format: SHA-256(<identifier> <FQDN>)"
+	IN	TXT	"DHCP identifier. RFC4701 (2006)"
+
+dlv	IN	DLV	56039 13 2 4104805B43928FC573F0704A2C1B5A10BAA2878DE26B8535DDE77517C154CE9F
+	IN	TXT	"Format: <16-bit key tag> <8-bit algorithm> <8-bit digest type> <digest of owner name concatenated with the DNSKEY RDATA>"
+	IN	TXT	"DNSSEC Lookaside Validation used for off-path validation. RFC4431 (2006); RFC5074 (2007)"
+
+dname	IN	DNAME	dns.netmeister.org.
+	IN	TXT	"Format: <domain-name>"
+	IN	TXT	"Delegation name record, used to e.g., redirect an entire domain. RFC2672 (1999); RFC6672 (2012)"
+
+dnskey	IN	DNSKEY 257 3 13 JErBf5lZ1osSWg7r51+4VfEiWIdONph0L70X0ToT7DkbikKQIp+qvuOO Zri7j3qVComv7tgTIBhKxeDQercdKQ==
+	IN	DS 51266 13 2 809A66766A5D69A3DA6ACBE461483393B879B746481BA80BC4D1C69ECC52923D
+; TXT records in dnskey zone
+
+; This only makes sense if we have a "ds" zone
+ds	IN	DS	56393 13 2 BD36DD608262A026083721FA19E2F7B474F531BB3179CC00A0C38FF00CA11657
+	IN	DNSKEY	257 3 13 RyjD9PTu6vn/kaWqvmmSUjwo9XGKz/Fm6sRRQBO3uZfcGJpk9l7rqYg5 MEtCcHc2O8dTJVDZL+Y+PzqJxsomJw==
+
+; TXT records in dnskey zone
+
+eui48	IN	EUI48	bc-a2-b9-82-32-a7
+	IN	TXT	"Format: six two-digit hexadecimal numbers separated by hyphens"
+	IN	TXT	"48-bit IEEE Extended Unique Identifier; MAC address. RFC7043 (2013)"
+
+eui64	IN	EUI64	be-a2-b9-ff-fe-82-32-a7
+	IN	TXT	"Format: eight two-digit hexadecimal numbers separated by hyphens"
+	IN	TXT	"64-bit IEEE Extended Unique Identifier; MAC address. RFC7043 (2013)"
+
+hinfo	IN	HINFO	PDP-11 UNIX
+	IN	TXT	"Format: two <character-string>s of up to 40 chars each"
+	IN	TXT	"Originally 'host information' like CPU and OS; now used by Cloudflare in response to 'ANY' requests. RFC883 (1983); RFC8482 (2019)"
+
+hip	IN	HIP	(	2					; RSA
+				200100107B1A74DF365639CC39F1D578	; HIT as IPv6 (RFC7343)
+				AwEAAbdxyhNuSutc5EMzxTs9LBPCIkOFH8cIvM4p9+LrV4e19WzK00+CI6zBCQTdtWsuxKbWIy87UOoJTwkUs7lBu+Upr1gsNrut79ryra+bSRGQb1slImA8YVJyuIDsj7kwzG7jnERNqnWxZ48AWkskmdHaVDP4BcelrTI3rMXdXF5D
+				rvs.example.com.			; rendezvous server
+			)
+	IN	TXT	"Format: <pk-algorithm> <base16-encoded-hit> <base64-encoded-public-key> <rendezvous-server[1]> ... <rendezvous-server[n]>"
+	IN	TXT	"Host Identity Protocol mappings of Host Identities and Host Identity Tags to IP addresses. RFC5205 (2008); RFC8005 (2016)"
+
+; Commonly used with a _port._scheme name, e.g., _8443._foo => foo://:8443
+; Not yet supported in bind, but see e.g.,
+; https://ypcs.fi/howto/2020/09/30/announce-https-via-dns/
+; ServiceForm
+;https IN	HTTPS	1 . (
+;				alpn="h3,h2"
+;				ipv6hint="2001:470:30:84:e276:63ff:fe72:3900"
+;				port="8080"
+;				echconfig="ZW5jcnlwdGVkIGNsaWVudCBoZWxsbwo=" )
+https	IN	TYPE65 \# 123 2d6e2031202e20616c706e3d2268332c683222206970763668696e743d22323030313a3437303a33303a38343a653237363a363366663a666537323a333930302220706f72743d22383038302220656368636f6e6669673d225a57356a636e6c776447566b49474e73615756756443426f5a57787362776f3d220a
+; AliasForm
+;	IN	HTTPS	0 www.netmeister.org.
+	IN	TYPE65 \# 25 2d6e2030207777772e6e65746d6569737465722e6f72672e0a
+	IN	TXT	"Format: <16-bit SvcFieldPriority> <SvcDomainName> <SvcFieldValue>"
+	IN	TXT	"SVCB variation specifically for HTTP/HTTPS. IETF Draft (2020)"
+
+ipseckey	IN	IPSECKEY	10 0 2 . AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ==
+	IN	TXT	"Format: <8-bit precedence> <8-bit gateway type> <8-bit algorithm> <40-bit gateway> <base64-encoded public-key>"
+	IN	TXT	"Public Key for use with IPSec; usually stored in the relevant in-addr.arpa / ip6.arpa zone. RFC4025 (2005)"
+
+ixfr	IN	TXT	"Pseudo-RR: Incremental Zone Transfer. RFC1995 (1996)"
+
+;  dnssec-keygen -r /dev/urandom -p 255 -n ENTITY -T KEY -b 256 -a DH key.dns.netmeister.org.
+key	IN	KEY	512 255 2 ACDtkdVR2HWmc0HPEwkrM+SOrWZd8yPTAytLYZj2u33KgwABAgAg6jav9rTK68C8j+kfLv7+re8KAb1qJXqdSrmL+1l3Js4=
+	IN	TXT	"Format: <16-bit flags> <8-bit protocol> <8-bit algorithm> <base64-encoded public key>"
+	IN	TXT	"Public Key associated name; used with e.g., TSIG / SIG(0). Obsoleted for DNSSEC keys via DNSKEY, for IPSec via IPSECKEY RRs. RFC2535 (1999); RFC2930 (2000); RFC2931 (2000)"
+
+kx	IN	KX	1 panix.netmeister.org.
+	IN	TXT	"Format: <16-bit preference> <domain-name>"
+	IN	TXT	"Key Exchange Delegation. RFC2230 (1997)"
+
+loc	IN	LOC	40 44 9 N 73 59 26 W 10m
+	IN	TXT	"Format: d-lat [m-lat [s-lat]] {"N"|"S"} d-long [m-long [s-long]] {"E"|"W"} alt["m"] [siz["m"] [hp["m"] [vp["m"]]]]"
+	IN	TXT	"Geographical information associated with a domain name. RFC1876 (1996)"
+
+mx	IN	MX	50 panix.netmeister.org.
+	IN	TXT	"Format: <16-bit preference> <domain-name>"
+	IN	TXT	"Mail Exchange Delegation. RFC1035 (1987)"
+
+naptr	IN	NAPTR	10 10 "u" "smtp+E2U" "!.*([^\.]+[^\.]+)$!mailto:postmaster@$1!i"   .
+	IN	NAPTR	20 10 "s" "http+N2L+N2C+N2R" "" www.netmeister.org.
+	IN	TXT	"Format: <16-bit order> <16-bit preference> <character-string flags> <characer-string services> <character-string regex> <domain-name>"
+	IN	TXT	"Naming Authority Pointer; regular expression rewriting of domain names, commonly used with e.g., SIP. RFC2915 (2000); RFC3403 (2002)"
+
+ns	IN	NS	panix.netmeister.org.
+	IN	DS	21656 13 2 EAB9CBDA29CF68BB9ABB0047E49B56383C093FABF7C75B6B6F0483E36D3FCA3A
+	IN	DNSKEY	257 3 13 JErBf5lZ1osSWg7r51+4VfEiWIdONph0L70X0ToT7DkbikKQIp+qvuOO Zri7j3qVComv7tgTIBhKxeDQercdKQ==
+	IN	TXT	"Format: <domain-name>"
+	IN	TXT	"Naming Authority Pointer; delegates authority of the given domain to the given name server. RFC883 (1983); RFC1035 (1987)"
+
+; The actual value will be provided by bind, so no need to define it.
+nsec	IN	TXT	"Format: <domain-name> <16-bit type bit map>"
+	IN	TXT	"Next secure record. Used to e.g., prove non-existence of a record. RFC4034 (2005)"
+
+nsec3	IN	DNSKEY	257 3 13 i1eth2wpAeyweTpRp8/Tim26m9wjYiFZRhzTSn6neM4q7ZYqlDH61as4 +U7QvPAz6yV0bn9t1YCt+Ox4YFqJ/w==
+	IN	DS	24381 13 2 6839540410B8D55D2994DC98DF7134C22FA831F008B626DC788617B7A3DC47AC
+
+nsec3param	IN	DNSKEY 257 3 13 Axfep/JzUMTy442H2mssCegqjUxx4YaB4+GbfBpGS1S0QXioQKi4LSCI Tnlss3P9ZzOtNJeFxAbRxjPrHBbMfQ==
+	IN	DS	54885 13 2 EBBF775A8F45E1ADDD5BB177619ECD9FEEA682412D4F5B377161CBFF2BA97476
+
+; This makes no sense. For an actual example, see e.g.,
+; f6d6048431f8b67313b5b8011e0be5b03f21b4458a7e67f3fb298900._openpgpkey.netmeister.org,
+; which represents jschauma@netmeister.org.
+openpgpkey	IN	OPENPGPKEY	(
+                  mQENBE2L+QkBCADx6DXFdqDEAK1OYYtOeLp54Z0G87t6Nmz+nodbd9f4Uw0T
+                  6v32O2O0yVwA07fCGfPc+3oeCgDact5cpicAm1C1nF3XrcV6YCAccswybl11
+                  ZnlJBOtu1iePYHoBM+iZwdtCaPVlnPoFbuYbjDt5sv7g1MN5sXqktkyEg8Jc
+                  JKWxrlaFI0lH/YIpOBokXznv2YUWIg+8V6GTGpX2kYRJziXJizzQ1jFYn1UP
+                  3Pa+PYlffkbT/vEaLc3NzVoLUavXRgeRrUWbDc06tQmYolZGArrH7Lrf6Bft
+                  1YFNsTxXqo/eUFvW8gURAxbbD9F05sFtyDenuVl40xsbMfSFtqfQKi+TABEB
+                  AAG0I0phbiBTY2hhdW1hbm4gPGpzY2hhdW1hQG5ldGJzZC5vcmc+iQE2BBMB
+                  AgAgAhsDBgsJCAcDAgQVAggDBBYCAwECHgECF4AFAmA1JXgACgkQZs5P6W9r
+                  09cPFgf8DfO2IGx1iIbrTHRM5K+KpifygRxJTckO+G1M9XICbO2DZ5O/eex0
+                  cFPaueSln92xp9skl5p2R3oIUVnSEaS00mGV7CMbKGIXlb4K4qeVb6uT8/2O
+                  CAn3xdPKehcW8lvguaS+65596XVLYjabz8ZhwhkxSL5XRbIPCga4AxVAi0Di
+                  JLLrEFPlRWb5X3VYdxxnU8lXiQKgAKWVhONldf2NZW8iOhGXVNXZMmjybFYi
+                  hFdGO3szaZDFkeh96e2axE8BoXLxDuuTIe+F92oE6pWaH/asIo4LiGGYFdH/
+                  +2wqieoG1uNIQ5xc5xSju8qpdrQ4Q7GgeemF0A4CspKx5cMs8LQzSmFuIFNj
+                  aGF1bWFubiAoQGpzY2hhdW1hKSA8anNjaGF1bWFAbmV0bWVpc3Rlci5vcmc+
+                  iQE2BBMBAgAgBQJSrcFAAhsDBgsJCAcDAgQVAggDBBYCAwECHgECF4AACgkQ
+                  Zs5P6W9r09efjgf/ajHLyvaVMeX2eT5V5tluecR2+ZKF0fPp1kV/kN2ilo1i
+                  kS4lClxzYf5mcBket+4TjfrDtVgRdipCszeYXerFBz3j554dORMTSxu3wIty
+                  cL85nAbmdk7wH0uvNu4LN/rSxzg938oMp2O7gH9oZTx+mVczYW8I4I9RFttI
+                  vDjmAEujKzmI07kUJZsQCAtQ7jEEQRGHDggLv7hQI90tihunYbwfxmBnWNET
+                  D/mLkiouMwzfjVDHeC6GQok8oMiMf0RuGc2jmGZFqOAUGupBMIoDTJO5Mcn9
+                  63va1Y4ncJBV+XEh9p7VfOSjc7bHfTSlFB/kaq4lSjQ8LLzYN1gfAdYU4rQn
+                  SmFuIFNjaGF1bWFubiA8anNjaGF1bWFAbmV0bWVpc3Rlci5vcmc+iQE5BBMB
+                  AgAjAhsDBgsJCAcDAgQVAggDBBYCAwECHgECF4AFAmA1JXwCGQEACgkQZs5P
+                  6W9r09fGBwf+P2cm/HxfnlYhFS5hsNdbK0EyiXIewOYHkBj4ZkNlWvzNjwRO
+                  ZySEizF6Zfcxt8vZKCJckneAHrRNB6dXZSJ7S9Me0gPOS7AVYtX+5oJPZv4u
+                  g3odygJx0bXx/YTQQxoYHj4QG9Kxx+QXfHTZ6QkQ4Vc/gWMsTxmhFj3DSqyj
+                  PcLp5GSC6z6Pwpp5XlC1ctQwg2QvMxNcpjlvdbBF26QgQeKM45D41/W8cRyk
+                  2geZjZLI/8MiHsfQ88wCtuECjAGNfBDz/fNqjQ9a1M38Tad6WIsN+SZiX5aG
+                  6JrPRT9lL38U4/ziaA5WLSvBBvfc/jOoPQOtEK9UXkFutJmkaKQmQbkBDQRN
+                  i/kxAQgAtb4+nY+l5ojJpUWFOOMCGjvYO6PhY5NpuOfLIgjOHVcwj6Yz0LSn
+                  DG+QSnQ1JxSDovXxZZtcnN7j9xqJFbtMi4MQEoSNL3XxFZy+QAqqKNkGhARq
+                  W5uK4jlm5BPgza4qnaG5bqtdPMIOyvojIJQoWKhKcGMmWsvq3sD4JdMEsnK/
+                  YjQCH6N4eCos2P7nW6Q8kjMIO3YqJT+6sHliOXrqi5/4EoT6GmkyTttX5IMk
+                  Clv4faAi7U9SkucZDjsdk2uwcetobUu/0LLnzFrexk/K2xNSDcX6MMD3x3/S
+                  o1DsA6Mxo/FbwzE+AQ2Y2ve4Y9hGFX35TDoBi881kQ7oDiukLwARAQABiQEf
+                  BBgBAgAJBQJNi/kxAhsMAAoJEGbOT+lva9PXpWAIAMn/iaZdax6a0GkEkPWv
+                  wpzb1zjNehjnO5lKI4NrLKNlygHoWL4SXsr925e/GOFInAn6iGdB3KibE8YE
+                  oWVuON5teMMsZxfln094F5szTv1HA8Gsdvf0R+8IMifFO+7HavJj+Qhuu8+X
+                  pm8tleYeZR61qbY4h4KoPQP4G4KbF+R11vma31gLkBGD5gnkgVPyhFuPeBpt
+                  CP+T+2W9sc2EEVcxWbLB0qcqyBEy6eXiPxyKurOCed9kBvyqo+FZTJpElOnJ
+                  o/NqodY5Nsz1QchbMHN2FVmmFfrVpocnRQPm1lxqzxwoqJrUTyWpk/J8/0Pb
+                  KlSTjRKziFLqudSy/dqFWmk=
+)
+	IN	TXT	"Format: base64-encoded OpenPGP Transferable Public Key"
+	IN	TXT	"OpenPGP Public Key record, used within DANE. RFC7929 (2016)"
+
+opt	IN	TXT	"Format: <16-bit option code> <16-bit option length> <option-data>"
+	IN	TXT	"Pseudo-RR for EDNS options. RFC6891 (2013)"
+
+ptr	IN	PTR	ptr.dns.netmeister.org.
+	IN	TXT	"Format: <domain-name>"
+	IN	TXT	"Domain Name Pointer; commonly found in the in-addr.arpa and ip6.arpa domains and used in reverse lookups. RFC1035 (1987)"
+
+rp	IN	RP	jschauma.netmeister.org. contact.netmeister.org.
+	IN	TXT	"Format: <mbox-dname> <txt-dname>"
+	IN	TXT	"Responsible Person. RFC1183 (1990)"
+
+; Automatically generated via DNSSEC.
+rrsig	IN	TXT	"Format: <16-bit type covered> <8-bit algorithm> <8-bit labels> <32-bit TTL> <32-bit signature expiration> <32-bit signature inception> <16-bit key tag> <40-bit signers name> <base64-encoded signature>"
+	IN	TXT	"DNSSEC Signature of the Resource Record Set. RFC4034 (2005)"
+
+; SIG(0) records are generated by the server, not read from the zone,
+; so this is a bogus SIG record that you won't actually get returned
+; to you.  bind also only uses SIG(0) with nsupdate(1).
+;sig	IN	SIG	TXT 13 4 3600 20210725182822 20210711204631 56039 dns.netmeister.org. yrYfGgprzYhsBLDlxwu9NFLbpwPeJ0CkZWpLJGUAp5/qWnEEY2CmpD9fg0ozpxTh2eC349j+6+l7ylKKMmRrJA==
+sig	IN	TXT	"Format: <16-bit type covered> <8-bit algorithm> <8-bit labels> <32-bit TTL> <32-bit signature expiration> <32-bit signature inception> <16-bit key tag> <40-bit signers name> <base64-encoded signature>"
+	IN	TXT	"Signature record; in DNSSEC replaced by RRSIG. RFC2535 (1999); RFC2931 (2000); RFC4034 (2005)"
+
+; Incorrect data.  Normally would use e.g.
+; f6d6048431f8b67313b5b8011e0be5b03f21b4458a7e67f3fb298900._smimecert.netmeister.org,
+; which represents jschauma@netmeister.org.
+smimea	IN	SMIMEA	3 1 1 8CE14CBE1FAFAE9FB25845D335E00E416BC2FAE02E8746689C006DA59C1F9382
+	IN	TXT	"Format: <8-bit cert usage> <8-bit selector> <8-bit matching type> <base64-encoded certificate data>"
+	IN	TXT	"S/MIME certificate association. RFC8162 (2017)"
+
+; The actual SOA record comes from the subzone.
+soa	IN	DNSKEY	257 3 13 A1Hroyhgo6rBgOzwrb78Ze3TLlSilzL0TjiFjQlqCfXiKeTspN3kWw8L XerArBYxRL72Mq9F7wOl6VnbuOQkTA==
+	IN	DS	15057 13 2 37B820412C83F1B495224F3064C272E287292C2453BB248BD182D4B0E81F72AC
+
+srv	IN	SRV	0 1 80 panix.netmeister.org.
+	IN	TXT	"Format: <16-bit priority> <16-bit weight> <16-bit port> <domain-name>"
+	IN	TXT	"Service location records. Commonly something like _port._protocol. RFC2052 (1996); RFC2782 (2000)"
+
+sshfp	IN	SSHFP	1 1 53A76D5284C91E140DEC9AD1A757DA123B95B081
+	IN	SSHFP	3 2 62475A22F1E4F09594206539AAFF90A6EDAABAB1BA6F4A67AB3906177455CF84
+	IN	TXT	"Format: <8-bit algorithm> <8-bit fingerprint type> <fingerprint>"
+	IN	TXT	"SSH Public Key Fingerprints. RFC4255 (2006)"
+
+; Commonly used with a _port._scheme name, e.g., _8443._foo => foo://:8443
+; Not yet supported in bind, but see e.g.,
+; https://ypcs.fi/howto/2020/09/30/announce-https-via-dns/
+; ServiceForm
+;svcb	IN	SVCB	1 panix.netmeister.org. ipv6hint="2001:470:30:84:e276:63ff:fe72:3900" port="8888"
+svcb	IN	TYPE64 \# 85 2d6e20312070616e69782e6e65746d6569737465722e6f72672e206970763668696e743d22323030313a3437303a33303a38343a653237363a363366663a666537323a333930302220706f72743d2238383838220a
+	IN	TXT	"Format: <16-bit SvcFieldPriority> <SvcDomainName> <SvcFieldValue>"
+	IN	TXT	"General Purpose Service Binding. IETF Draft (2020)"
+
+ta	IN	TA	56039 13 2 4104805B43928FC573F0704A2C1B5A10BAA2878DE26B8535DDE77517C154CE9F
+	IN	TXT	"Format: <16-bit key tag> <8-bit algorithm> <8-bit digest type> <digest of owner name concatenated with the DNSKEY RDATA>"
+	IN	TXT	"DNSSEC Trust Authorities; proposed for DNSSEC without a signed root. No RFC (2005)."
+
+; Quoting RFC2930:
+; TKEY is a meta-RR that is not stored or cached in the DNS and does not appear in zone files.
+; sudo dnssec-keygen -r /dev/urandom -p 255 -n ENTITY -T KEY -b 256 -a DH tkey.dns.netmeister.org.
+tkey	IN	KEY	512 255 2 ACChNLJiFjqre0/veUP0AplAf2lyNgRwcdwZViTAo6m/swABAgAgMp9m 2JGio5XOHHXmKLDZ37/39/SbmPKhsMd/WUYToWE=
+	IN	TXT	"Format: <algorithm name> <32-bit inception> <32-bit expiration> <16-bit mode> <16-bit error> <16-bit key size> <key data> <16-bit other size> <other data>"
+	IN	TXT	"Transaction Key for e.g., TSIG, encrypted with accompanying KEY record. RFC2930 (2000)"
+
+; This is actually the TLSA record for _443._tcp.panix.netmeister.org.
+tlsa	IN	TLSA	3 1 1 8CE14CBE1FAFAE9FB25845D335E00E416BC2FAE02E8746689C006DA59C1F9382
+	IN	TXT	"Format: <8-bit usage> <8-bit selector> <8-bit matching type> <cert data>"
+	IN	TXT	"DANE record for TLS. RFC6698 (2012)"
+
+; TSIG RR is generated by bind when queried with a TSIG
+; e.g.:
+; dig @panix.netmeister.org -y hmac-sha256:tsig.dns.netmeister.org:shared-key-here= tsig tsig.dns.netmeister.org.
+tsig	IN	TXT	"Format: <algorithm name> <48-bit time signed> <16-bit fudge> <16-bit MAC size> <MAC> <16-bit oid> <16-bit error> <16-bit other size> <other data>"
+	IN	TXT	"Transaction Signature, used to authenticate e.g., dynamic client updates or server responses by way of a shared secret (e.g., TKEY). RFC2845 (2000); RFC8945 (2020)"
+
+txt	IN	TXT	"Format: <text>"
+	IN	TXT	"Descriptive text. Completely overloaded for all sorts of things. RFC1035 (1987)"
+
+; Normally this would be e.g., _service._protocol
+uri	IN	URI	10 1 "https://www.netmeister.org/blog/dns-rrs.html"
+	IN	TXT	"Format: <16-bit priority> <16-bit weight> <uri>"
+	IN	TXT	"URI selection. Improvement / complement to NAPTR / SRV. RFC7553 (2015)"
+
+; zonemd is in its own zone.
+; calculated via e.g., https://github.com/niclabs/dns-tools
+; dns-tools digest -f zonemd-zone -o somewhere -z zonemd.dns.netmeister.org.
+zonemd 	IN	DNSKEY	257 3 13 sg1EBb/44SfKd+ZrR0LsZdMGobB55hvL2OaRGpVdPJfLe8bZgPGYBAC/TfJRn6AvLlpmXNl9U8cTd3We7I40RA==
+	IN	DS	7645 13 2 EB032BCDA4F0333AEEE9484C2A07B5EA0F52BD85319E1AB9C0D933050D9AD506
+
+; --- Obsolete, ancient, or largely unused RRs ---
+
+a6	IN	A6	0 2001:470:30:84:e276:63ff:fe72:3900
+	IN	A6	64 ::e276:63ff:fe72:3900 a6-prefix
+	IN	TXT	"Format: <8-bit prefix> <128-bit hex IPv6 address> <prefix-name>"
+	IN	TXT	"Early IPv6 record, obsoleted by AAAA. RFC2874 (2000)"
+
+; used to supplement the second prefix example of the above a6 record
+a6-prefix	IN	A6	0 2001:470:30:84::
+
+amtrelay	IN	AMTRELAY	10 0 2 2001:470:30:84:e276:63ff:fe72:3900
+	IN	TXT	"Format: <8-bit precedence> <1-bit discover> <7-bit type> <domain-name>"
+	IN	TXT	"Automatic Multicast Tunneling Relay. RFC8777 (2020)"
+
+atma	IN	ATMA	39.246f.000e7c9c031200010001.000012345678.00
+	IN	TXT	"Format: <address>"
+	IN	TXT	"ATM End System Address. ATM Forum Publication (2000)"
+
+; https://www.iana.org/assignments/dns-parameters/AVC/avc-completed-template
+avc	IN	AVC	app-name:Unix time|business:default|server-port:TCP/4242,UDP/4242
+	IN	TXT	"Format: <RFC6759 shortened names>"
+	IN	TXT	"Application Visibility and Control. RR Submission (2016)"
+
+; https://www.ietf.org/archive/id/draft-durand-doa-over-dns-03.txt
+doa	IN	DOA	0 1 2 "" aHR0cHM6Ly93d3cubmV0bWVpc3Rlci5vcmcvYmxvZy9kbnMtcnJzLmh0bWwK
+	IN	TXT	"Format: <32-bit doa-enterprise> <32-bit doa-type> <16-bit doa-location> <doa-media-type> <doa-data>"
+	IN	TXT	"Digital Object Architecture in the DNS. Internet Draft (2017)"
+
+; http://ana-3.lcs.mit.edu/~jnc/nimrod/dns.txt
+eid	IN	EID	CA FE FA CE 12 34
+	IN	TXT	"Format: <octets>"
+	IN	TXT	"Endpoint Identifier in the Nimrod Routing Architecture. Internet Draft (1995)"
+
+gpos	IN	GPOS	40.731 -73.9919 10.0
+	IN	TXT	"Format: <longitude> <latitude> <altitude>"
+	IN	TXT	"Geographical Location, similar to LOC. RFC1712 (1994)"
+
+isdn	IN	ISDN	150862028003217 004
+	IN	TXT	"Format: <ISDN-address> <optional sa>"
+	IN	TXT	"ISDN Telephone Number. RFC1183 (1990)"
+
+l32	IN	L32	10 203.0.113.44
+	IN	TXT	"Format: <16-bit preference> <32-bit locator32>"
+	IN	TXT	"Identifier-Locator Network Protocol; 32-bit Locator. RFC6742 (2012)"
+
+l64	IN	L64	10 2001:0DB8:1140:1000
+	IN	TXT	"Format: <16-bit preference> <64-bit locator64>"
+	IN	TXT	"Identifier-Locator Network Protocol; 64-bit Locator. RFC6742 (2012)"
+
+lp	IN	LP	10 l64.dns.netmeister.org.
+	IN	LP	20 l32.dns.netmeister.org.
+	IN	TXT	"Format: <16-bit preference> <domain-name>"
+	IN	TXT	"Identifier-Locator Network Protocol; Locator Pointer. RFC6742 (2012)"
+
+maila	IN	TXT	"Format: <domain-name>"
+	IN	TXT	"QTYPE request for MD and MF. RFC883 (1983); obsoleted by MX via RFC973 (1986)"
+
+mailb	IN	TXT	"Format: <domain-name>"
+	IN	TXT	"QTYPE request for MB, MG, or MR. RFC883 (1983); obsoleted by MX via RFC973 (1986)"
+
+mb	IN	MB	panix.netmeister.org.
+	IN	TXT	"Format: <domain-name>"
+	IN	TXT	"Mailbox record. RFC883 (1983); not formally obsoleted"
+
+;md	IN	MD	panix.netmeister.org.
+md	IN	TXT	"Format: <domain-name>"
+	IN	TXT	"Mail Destination RFC883 (1983); obsoleted by MX via RFC973 (1986)"
+
+;mf	IN	MF	panix.netmeister.org.
+mf	IN	TXT	"Format: <domain-name>"
+	IN	TXT	"Mail Forwarder RFC883 (1983); obsoleted by MX via RFC973 (1986)"
+
+mg	IN	MG	jschauma.netmeister.org.
+	IN	MG	digestingducks.netmeister.org.
+	IN	MG	jschauma.yahoo.com.
+	IN	MINFO	jschauma.netmeister.org. postmaster.netmeister.org.
+	IN	TXT	"Format: <mailbox>"
+	IN	TXT	"Mail Group (mailing list) record. RFC883 (1983); not formally obsoleted"
+
+minfo	IN	MINFO	jschauma.netmeister.org. postmaster.netmeister.org.
+	IN	TXT	"Format: <responsible mailbox> <error mailbox>"
+	IN	TXT	"Responsible and error handling mailbox. RFC883 (1983); not formally obsoleted"
+
+mr	IN	MR	panix.netmeister.org.
+	IN	TXT	"Format: <domain-name>"
+	IN	TXT	"Mail Rename record. RFC883 (1983); not formally obsoleted"
+
+nid	IN	NID	10 0014:4fff:ff20:ee64
+	IN	TXT	"Format: <16-bit preference> <64-bit nodeid>"
+	IN	TXT	"Identifier-Locator Network Protocol; Node Identifier. RFC6742 (2012)"
+
+; http://ana-3.lcs.mit.edu/~jnc/nimrod/dns.txt
+nimloc	IN	NIMLOC	DE AD BE EF 12 34
+	IN	TXT	"Format: <octets>"
+	IN	TXT	"Nimrod Locator in the Nimrod Routing Architecture. Internet Draft (1995)"
+
+; https://www.ietf.org/archive/id/draft-reid-dnsext-zs-01.txt
+ninfo	IN	NINFO	"The zone owner is asleep, so don't bother trying voice-based communication."
+	IN	TXT	"Format: <text>"
+	IN	TXT	"Zone Status information, initially requested as 'ZS'. Internet Draft (2008)"
+
+; Quoting RFC883:
+; "Null RRs are not allowed in master files."
+;null	IN	NULL	"avocado"
+null	IN	TXT	"Format: <anything>"
+	IN	TXT	"Placeholder records in some experimental extensions. RFC883 (1983)"
+
+nsap	IN	NSAP	0x47.0005.80.005a00.0000.0001.e133.ffffff000161.00
+	IN	TXT	"Format: <nsap>"
+	IN	TXT	"Network Service Access Point. RFC1706 (1994)"
+
+nsap-ptr	IN	NSAP-PTR nsap
+	IN	TXT	"Format: <domain-name>"
+	IN	TXT	"NSAP to name mapping. Usually found in the 'nsap.int' domain. RFC1706 (1994)"
+
+nxt	IN	NXT	openpgpkey OPENPGPKEY TXT
+	IN	TXT	"Format: <domain-name> <16-bit type bit map>"
+	IN	TXT	"Precursor to NSEC/NSEC3. RFC2065 (1997)"
+
+px	IN	PX	10 px PRMD-netmeister.C-us.G-Jan.S-Schaumann
+	IN	TXT	"Format: <16-bit preference> <domain-name> <x400-in-domain-syntax>"
+	IN	TXT	"Map domain names into X.400 O/R names. RFC2163 (1998)"
+
+rt	IN	RT	10 panix.netmeister.org.
+	IN	TXT	"Format: <16-bit preference> <intermediate-host>"
+	IN	TXT	"Route Through RR. RFC1183 (1990)"
+
+; bind uses an undocumented "meaning" field
+; https://gitlab.isc.org/isc-projects/bind9/-/issues/1202
+sink	IN	SINK	0 64 1 ZG5zLm5ldG1laXN0ZXIub3JnLg==
+	IN	TXT	"Format: <coding> <subcoding> <base64 data>"
+	IN	TXT	"Kitchen Sink record to allow stuffing just about anything into the DNS without requiring new RRs to be defined. Internet draft (1997)"
+
+spf	IN	SPF	"v=spf1 a mx -all"
+	IN	TXT	"Format: <spf text>"
+	IN	TXT	"Sender Policy Framework alternative to TXT record. RFC4408 (2006)"
+
+talink	IN	TALINK	. _talink1
+	IN	TXT	"Format: <domain-name> <domain-name>"
+	IN	TXT	"DNSSEC Trust Anchor History. Internet Draft (2009)"
+
+_talink1	IN	TALINK	talink _talink2
+_talink2	IN	TALINK	_talink2 .
+
+wks	IN	WKS	166.84.7.99 6 25 80 443
+	IN	WKS	166.84.7.99 17 53
+	IN	TXT	"Format: <32-bit IP address> <16-bit protocol> <8-bit bit map>"
+	IN	TXT	"Well Known Services. RFC883 (1983); not formally obsoleted, but recommended against in e.g., RFC1123 (1989)"
+
+x25	IN	X25	311061700956
+	IN	TXT	"Format: <PSDN-address>"
+	IN	TXT	"Experimental representation of X.25 addresses. RFC1183 (1990)"

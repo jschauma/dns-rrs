@@ -1,0 +1,21 @@
+; This zone file exists purely so that our parent lookup against
+; "ds.dns.netmeister.org" works.
+;
+; See also: https://www.netmeister.org/blog/dns-rrs.html
+;
+; This file is in the public domain.
+;
+; -Jan Schaumann <jschauma@netmeister.org> / @jschauma
+;
+; https://github.com/jschauma/dns-rrs
+
+$TTL	3600
+@	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
+				2021071101	; Serial
+				3600		; Refresh
+				300		; Retry
+				3600000		; Expire
+				3600 )		; Minimum
+	IN	NS	panix.netmeister.org.
+	IN	TXT	"Format: <16-bit key tag> <8-bit algorithm> <8-bit digest type> <digest of owner name concatenated with the DNSKEY RDATA>"
+	IN	TXT	"Delegation signer; the DNSSEC public key of the given child zone stored in the parent zone. RFC4034 (2005)"

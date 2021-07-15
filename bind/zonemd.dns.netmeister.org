@@ -1,0 +1,22 @@
+; This zone file exists purely so that we can look up
+; the ZONEMD RR for zonemd.dns.netmeister.org.
+;
+; See also: https://www.netmeister.org/blog/dns-rrs.html
+;
+; This file is in the public domain.
+;
+; -Jan Schaumann <jschauma@netmeister.org> / @jschauma
+;
+; https://github.com/jschauma/dns-rrs
+
+$TTL	3600
+@	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
+				2021071219	; Serial
+				3600		; Refresh
+				300		; Retry
+				3600000		; Expire
+				3600 )		; Minimum
+	IN	NS	panix.netmeister.org.
+	IN	ZONEMD	2021071219 1 1 4274f6bc562cf8ce512b21aa0a4ccc1eb9f4faaaecd01642d0a07bdea890c8845849d6015cc590f54b0ac7e87b9e41ed
+	IN	TXT	"Format: <32-bit serial> <8-bit scheme> <8-bit hash algorithm> <digest>"
+	IN	TXT	"Message Digest for zone data. RFC8976 (2021)"

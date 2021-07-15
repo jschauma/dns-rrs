@@ -1,0 +1,21 @@
+; This zone file exists purely so that we can look up
+; the SOA RR for soa.dns.netmeister.org.
+;
+; See also: https://www.netmeister.org/blog/dns-rrs.html
+;
+; This file is in the public domain.
+;
+; -Jan Schaumann <jschauma@netmeister.org> / @jschauma
+;
+; https://github.com/jschauma/dns-rrs
+
+$TTL	3600
+@	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
+				2021071400	; Serial
+				3600		; Refresh
+				300		; Retry
+				3600000		; Expire
+				3600 )		; Minimum
+	IN	NS	panix.netmeister.org.
+	IN	TXT	"Format: <domain-name> <domain-name> <32-bit serial> <32-bit refresh interval> <32-bit retry interval> <32-bit expiration interval> <32-bit minimum TTL>"
+	IN	TXT	"Start of Authority information about the given zone. RFC883 (1983); RFC1035 (1987)"

@@ -1,0 +1,21 @@
+; This zone file exists purely so that our parent lookup against
+; "dnskey.dns.netmeister.org" works.
+;
+; See also: https://www.netmeister.org/blog/dns-rrs.html
+;
+; This file is in the public domain.
+;
+; -Jan Schaumann <jschauma@netmeister.org> / @jschauma
+;
+; https://github.com/jschauma/dns-rrs
+
+$TTL	3600
+@	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
+				2021071101	; Serial
+				3600		; Refresh
+				300		; Retry
+				3600000		; Expire
+				3600 )		; Minimum
+	IN	NS	panix.netmeister.org.
+	IN	TXT	"Format: <16-bit flags> <8-bit protocol> <8-bit algorithm> <base64-encoded pubkey>"
+	IN	TXT	"The public key matching the private key used to sign the given zone. RFC4034 (2005)"
