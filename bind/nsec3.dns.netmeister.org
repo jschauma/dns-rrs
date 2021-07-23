@@ -11,7 +11,7 @@
 
 $TTL	3600
 @	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
-				2021071406	; Serial
+				2021072300	; Serial
 				3600		; Refresh
 				300		; Retry
 				3600000		; Expire
@@ -19,5 +19,7 @@ $TTL	3600
 	IN	NS	panix.netmeister.org.
 	IN	TXT	"Format: <8-bit hash algorithm> <8-bit flags> <16-bits iterations> <8-bit salt length> <24-bit salt> <8-bit hash-length> <24-bit next hashed owner name> <16-bit type bit map>"
 	IN	TXT	"Next secure record, v3, to prove authenticated denial of existence. RFC5155  (2008)"
+	IN	DNSKEY	257 3 13 i1eth2wpAeyweTpRp8/Tim26m9wjYiFZRhzTSn6neM4q7ZYqlDH61as4 +U7QvPAz6yV0bn9t1YCt+Ox4YFqJ/w== 
 
 next	IN	TXT	"A text record so that we can show the use of NSEC3."
+

@@ -31,7 +31,7 @@
 
 $TTL	3600
 @	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
-				2021071503	; Serial
+				2021072301	; Serial
 				3600		; Refresh
 				300		; Retry
 				3600000		; Expire
@@ -157,10 +157,12 @@ cert	IN	A	166.84.7.99
 
 
 www	IN	CNAME	www.netmeister.org.
-cname	IN	CNAME	cname.dns.netmeister.org.
+cname-loop	IN	CNAME cname-loop
 ; Yes, this is a loop.
-;	IN	TXT	"Format: <domain-name>"
-;	IN	TXT	"Additional records (besides DNSSEC related records) are not allowed on CNAMEs."
+
+cname	IN	CNAME	cname-txt
+cname-txt	IN	TXT	"Format: <domain-name>"
+	IN	TXT	"Additional records (besides DNSSEC related records) are not allowed on CNAMEs."
 cname01	IN	CNAME	cname02
 cname02	IN	CNAME	cname03
 cname03	IN	CNAME	cname04
@@ -284,7 +286,6 @@ dnskey	IN	DNSKEY 257 3 13 JErBf5lZ1osSWg7r51+4VfEiWIdONph0L70X0ToT7DkbikKQIp+qvu
 
 ; This only makes sense if we have a "ds" zone
 ds	IN	DS	56393 13 2 BD36DD608262A026083721FA19E2F7B474F531BB3179CC00A0C38FF00CA11657
-	IN	DNSKEY	257 3 13 RyjD9PTu6vn/kaWqvmmSUjwo9XGKz/Fm6sRRQBO3uZfcGJpk9l7rqYg5 MEtCcHc2O8dTJVDZL+Y+PzqJxsomJw==
 
 ; TXT records in dnskey zone
 
@@ -354,7 +355,6 @@ naptr	IN	NAPTR	10 10 "u" "smtp+E2U" "!.*([^\.]+[^\.]+)$!mailto:postmaster@$1!i" 
 
 ns	IN	NS	panix.netmeister.org.
 	IN	DS	21656 13 2 EAB9CBDA29CF68BB9ABB0047E49B56383C093FABF7C75B6B6F0483E36D3FCA3A
-	IN	DNSKEY	257 3 13 JErBf5lZ1osSWg7r51+4VfEiWIdONph0L70X0ToT7DkbikKQIp+qvuOO Zri7j3qVComv7tgTIBhKxeDQercdKQ==
 	IN	TXT	"Format: <domain-name>"
 	IN	TXT	"Naming Authority Pointer; delegates authority of the given domain to the given name server. RFC883 (1983); RFC1035 (1987)"
 
@@ -362,11 +362,9 @@ ns	IN	NS	panix.netmeister.org.
 nsec	IN	TXT	"Format: <domain-name> <16-bit type bit map>"
 	IN	TXT	"Next secure record. Used to e.g., prove non-existence of a record. RFC4034 (2005)"
 
-nsec3	IN	DNSKEY	257 3 13 i1eth2wpAeyweTpRp8/Tim26m9wjYiFZRhzTSn6neM4q7ZYqlDH61as4 +U7QvPAz6yV0bn9t1YCt+Ox4YFqJ/w==
-	IN	DS	24381 13 2 6839540410B8D55D2994DC98DF7134C22FA831F008B626DC788617B7A3DC47AC
+nsec3	IN	DS	24381 13 2 6839540410B8D55D2994DC98DF7134C22FA831F008B626DC788617B7A3DC47AC
 
-nsec3param	IN	DNSKEY 257 3 13 Axfep/JzUMTy442H2mssCegqjUxx4YaB4+GbfBpGS1S0QXioQKi4LSCI Tnlss3P9ZzOtNJeFxAbRxjPrHBbMfQ==
-	IN	DS	54885 13 2 EBBF775A8F45E1ADDD5BB177619ECD9FEEA682412D4F5B377161CBFF2BA97476
+nsec3param	IN	DS	54885 13 2 EBBF775A8F45E1ADDD5BB177619ECD9FEEA682412D4F5B377161CBFF2BA97476
 
 ; This makes no sense. For an actual example, see e.g.,
 ; f6d6048431f8b67313b5b8011e0be5b03f21b4458a7e67f3fb298900._openpgpkey.netmeister.org,
@@ -449,8 +447,7 @@ smimea	IN	SMIMEA	3 1 1 8CE14CBE1FAFAE9FB25845D335E00E416BC2FAE02E8746689C006DA59
 	IN	TXT	"S/MIME certificate association. RFC8162 (2017)"
 
 ; The actual SOA record comes from the subzone.
-soa	IN	DNSKEY	257 3 13 A1Hroyhgo6rBgOzwrb78Ze3TLlSilzL0TjiFjQlqCfXiKeTspN3kWw8L XerArBYxRL72Mq9F7wOl6VnbuOQkTA==
-	IN	DS	15057 13 2 37B820412C83F1B495224F3064C272E287292C2453BB248BD182D4B0E81F72AC
+soa	IN	DS	15057 13 2 37B820412C83F1B495224F3064C272E287292C2453BB248BD182D4B0E81F72AC
 
 srv	IN	SRV	0 1 80 panix.netmeister.org.
 	IN	TXT	"Format: <16-bit priority> <16-bit weight> <16-bit port> <domain-name>"
@@ -503,8 +500,7 @@ uri	IN	URI	10 1 "https://www.netmeister.org/blog/dns-rrs.html"
 ; zonemd is in its own zone.
 ; calculated via e.g., https://github.com/niclabs/dns-tools
 ; dns-tools digest -f zonemd-zone -o somewhere -z zonemd.dns.netmeister.org.
-zonemd 	IN	DNSKEY	257 3 13 sg1EBb/44SfKd+ZrR0LsZdMGobB55hvL2OaRGpVdPJfLe8bZgPGYBAC/TfJRn6AvLlpmXNl9U8cTd3We7I40RA==
-	IN	DS	7645 13 2 EB032BCDA4F0333AEEE9484C2A07B5EA0F52BD85319E1AB9C0D933050D9AD506
+zonemd	IN	DS	7645 13 2 EB032BCDA4F0333AEEE9484C2A07B5EA0F52BD85319E1AB9C0D933050D9AD506
 
 ; --- Obsolete, ancient, or largely unused RRs ---
 

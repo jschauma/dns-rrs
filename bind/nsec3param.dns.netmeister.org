@@ -11,7 +11,7 @@
 
 $TTL	3600
 @	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
-				2021071402	; Serial
+				2021072300	; Serial
 				3600		; Refresh
 				300		; Retry
 				3600000		; Expire
@@ -19,3 +19,4 @@ $TTL	3600
 	IN	NS	panix.netmeister.org.
 	IN	TXT	"Format: <8-bit hash algorithm> <8-bit flags> <16-bit iterations> <8-bit salt length> <24-bit salt>"
 	IN	TXT	"Parameters used for NSEC3. RFC5155 (2008)"
+	IN	DNSKEY	257 3 13 Axfep/JzUMTy442H2mssCegqjUxx4YaB4+GbfBpGS1S0QXioQKi4LSCI Tnlss3P9ZzOtNJeFxAbRxjPrHBbMfQ==

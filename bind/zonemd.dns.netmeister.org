@@ -11,7 +11,7 @@
 
 $TTL	3600
 @	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
-				2021071219	; Serial
+				2021072300	; Serial
 				3600		; Refresh
 				300		; Retry
 				3600000		; Expire
@@ -19,4 +19,5 @@ $TTL	3600
 	IN	NS	panix.netmeister.org.
 	IN	ZONEMD	2021071219 1 1 4274f6bc562cf8ce512b21aa0a4ccc1eb9f4faaaecd01642d0a07bdea890c8845849d6015cc590f54b0ac7e87b9e41ed
 	IN	TXT	"Format: <32-bit serial> <8-bit scheme> <8-bit hash algorithm> <digest>"
+	IN	DNSKEY	257 3 13 sg1EBb/44SfKd+ZrR0LsZdMGobB55hvL2OaRGpVdPJfLe8bZgPGYBAC/ TfJRn6AvLlpmXNl9U8cTd3We7I40RA==
 	IN	TXT	"Message Digest for zone data. RFC8976 (2021)"
