@@ -1,0 +1,70 @@
+; This zone file contains invalid DNS names to illustrate that
+; "hostnames" are not well-defined and that a DNS server may
+; well serve you answers for queries of type A/AAAA that are
+; not "valid".
+;
+; See also: https://www.netmeister.org/blog/hostnames.html
+;
+; This file is in the public domain.
+;
+; -Jan Schaumann <jschauma@netmeister.org> / @jschauma
+;
+; https://github.com/jschauma/dns-rrs
+
+$TTL	3600
+@	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
+				2021101602	; Serial
+				3600		; Refresh
+				300		; Retry
+				3600000		; Expire
+				3600 )		; Minimum
+	IN	NS	panix.netmeister.org.
+	IN	TXT	"This zone has example entries for 'invalid' hostnames. See also: https://www.netmeister.org/blog/hostnames.html"
+
+; "hostnames" must not start with a '-'
+
+-	IN	A	192.0.2.1
+	IN	AAAA	2001:db8:fa4e::1
+
+; neither can you end in a hyphen:
+a-	IN	A	192.0.2.2
+	IN	AAAA	2001:db8:fa4e::2
+
+; "_" is not allowed, either, although used for query minimization
+_	IN	A	192.0.2.3
+	IN	AAAA	2001:db8:fa4e::3
+
+; MX records should also be "hostnames", but would be funny if we could:
+jschauma@this.is	IN	MX	50	panix.netmeister.org.
+			IN	A	192.0.2.4
+			IN	AAAA	2001:db8:fa4e::4
+
+
+; multiple successive dashes are possible, but...
+; RFC5891 does not permit multiple dashes "in the third and fourth character position":
+0-------------------------------------------------------------9	IN	A	192.0.2.5
+		IN	AAAA	2001:db8:fa4e::5
+
+; Once we disable check-names in bind, anything goes:
+; :shrug:
+Â¯\_\(ã\)_/Â¯	IN	A	192.0.2.6
+
+		IN	AAAA	2001:db8:fa4e::6
+
+; ...and then we can escape stuff:
+\$HOSTNAME	IN	A	192.0.2.7
+		IN	AAAA	2001:db8:fa4e::7
+
+\(\){\;}\;whoami	IN	A	192.0.2.8
+		IN	AAAA	2001:db8:fa4e::8
+
+'.'	IN	A	192.0.2.9
+		IN	AAAA	2001:db8:fa4e::9
+
+; literal poop-emoji UTF-8
+ð©	IN	A	192.0.2.10
+		IN	AAAA	2001:db8:fa4e::10
+
+; literal a-umlaut
+Ã¤	IN	A	192.0.2.11
+		IN	AAAA	2001:db8:fa4e::11

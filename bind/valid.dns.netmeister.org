@@ -1,0 +1,85 @@
+; This zone file contains valid DNS names to illustrate edge cases
+; of what is defined as "valid" for a "hostname" label.
+;
+; See also: https://www.netmeister.org/blog/hostnames.html
+;
+; This file is in the public domain.
+;
+; -Jan Schaumann <jschauma@netmeister.org> / @jschauma
+;
+; https://github.com/jschauma/dns-rrs
+
+$TTL	3600
+@	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
+				2021101607	; Serial
+				3600		; Refresh
+				300		; Retry
+				3600000		; Expire
+				3600 )		; Minimum
+	IN	NS	panix.netmeister.org.
+	IN	TXT	"This zone has example entries for 'valid' hostnames. See also: https://www.netmeister.org/blog/hostnames.html"
+
+
+; since RFC1123, hostnames may start with a digit
+1	IN	A	203.0.113.1
+	IN	AAAA	2001:db8:1::1
+
+; valid characters for a "hostname" are:
+a-zA-Z0-9	IN	A	203.0.113.2
+		IN	AAAA	2001:db8:1::2
+
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa IN	A	203.0.113.63
+		IN	AAAA	2001:db8:a:a:a:a:a:63
+
+; we can have 253 total length, so strlen(".valid.dns.netmeister.org.")
+; 0.1.2.3.4.5.6.7.8.9.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z.z.y.x.w.v.u.t.s.r.q.p.o.n.m.l.k.j.i.h.g.f.e.d.c.b.a.9.8.7.6.5.4.3.2.1.0.0.1.2.3.4.5.6.7.8.9.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z.z.y.x.w.vu	IN	A	203.0.113.3
+0.1.2.3.4.5.6.7.8.9.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z.z.y.x.w.v.u.t.s.r.q.p.o.n.m.l.k.j.i.h.g.f.e.d.c.b.a.9.8.7.6.5.4.3.2.1.0.0.1.2.3.4.5.6.7.8.9.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z.z.y.x.w.v.ut	IN	A 203.0.113.3
+		IN	AAAA	2001:db8:0:1:2:3:4:5
+
+; 'b' and 'B' are the same, you will get back both records
+b	IN	A	203.0.113.4
+b	IN	AAAA	2001:db8:b::1
+B	IN	A	203.0.113.5
+B	IN	AAAA	2001:db8:b::2
+
+; punycode for poop emoji -- allowed in DNS, but
+xn--ls8h	IN	A	203.0.113.6
+		IN	AAAA	2001:db8:53::6
+; a-umlaut
+xn--4ca		IN	A	203.0.113.7
+		IN	AAAA	2001:db8:53::7
+
+; you _can_ start a label with a hyphen if it's not a "hostname"
+-	IN	TXT	"nothing to see here"
+
+; underscores are also ok as labels, but not as "hostnames"
+_	IN	TXT	"no query minimization here"
+
+; spaces work...
+\ 	IN	CNAME	1
+www.netmeister.org.\ .is       IN      CNAME   www.netmeister.org.
+; as do underscores, of course:
+________	IN	CNAME	www.netmeister.org.
+
+; and all the other shenanigans from 'invalid':
+; :shrug:
+Â¯\_\(ã\)_/Â¯ IN      CNAME 1
+ 
+; ...and then we can escape stuff:
+\$HOSTNAME     IN      CNAME   1
+\(\){\;}\;whoami       IN      CNAME   1
+
+
+; multiple successive dashes are possible, but...
+; RFC5891 does not permit multiple dashes "in the third and fourth character position".
+; bind9 doesn't seem to care:
+0-------------------------------------------------------------9 IN      A       203.0.113.8
+                IN      AAAA    2001:db8:53::8
+
+; multiple successive dashes are possible, but...
+; RFC5891 does not permit multiple dashes "in the third and fourth character position":
+0-a----------------------------------------------------------1.0-b----------------------------------------------------------2.0-c----------------------------------------------------------3.0-d-------------------------------4	IN	A	203.0.113.9
+		IN	AAAA	2001:db8:1:2:3:4:5:6789
+
+0xcafe	IN	A	203.0.113.10
+		IN	AAAA	2001:db8:cafe:cafe:cafe:cafe:cafe:c0fe

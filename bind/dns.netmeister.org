@@ -31,7 +31,7 @@
 
 $TTL	3600
 @	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
-				2021072301	; Serial
+				2021101602	; Serial
 				3600		; Refresh
 				300		; Retry
 				3600000		; Expire
@@ -39,7 +39,10 @@ $TTL	3600
 	IN	NS	panix.netmeister.org.
 	IN	TXT	"This zone has example entries for all defined DNS Resource Records. See also: https://www.netmeister.org/blog/dns-rrs.html"
 
+
 *	IN	TXT	"Wildcard record matching any names _not_ in the zone."
+*	IN	A	198.51.100.1
+*	IN	AAAA	2001:db8::c2de:2d22:5ca1:2727
 
 a	IN	A	166.84.7.99
 	IN	TXT	"Format: a single dotted decimal quad IPv4 address"
