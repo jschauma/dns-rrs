@@ -31,7 +31,7 @@
 
 $TTL	3600
 @	IN	SOA	panix.netmeister.org. jschauma.netmeister.org. (
-				2021101602	; Serial
+				2024101800	; Serial
 				3600		; Refresh
 				300		; Retry
 				3600000		; Expire
@@ -48,7 +48,7 @@ a	IN	A	166.84.7.99
 	IN	TXT	"Format: a single dotted decimal quad IPv4 address"
 	IN	TXT	"A 32-bit IPv4 host address. RFC882 (1983); RFC1035 (1987)"
 
-aaaa	IN	AAAA	2001:470:30:84:e276:63ff:fe72:3900
+aaaa	IN	AAAA    2602:f977:800:0:e276:63ff:fe72:3900
 	IN	TXT	"Format: single a hexadecimal IPv6 address"
 	IN	TXT	"A 128-bit IPv6 host address. RFC1884 (1995); RFC4291 (2006)"
 
@@ -67,7 +67,7 @@ axfr	IN	TXT	"Pseudo-RR: Authoritative Zone Transfer. RFC1035 (1987)"
 caa	IN	CAA	0 issue ";"
 	IN	CAA	0 issuewild ";"
 	IN	CAA	0 iodef "mailto:abuse@netmeister.org"
-	IN	TXT	"Format: <flags> <tag> <value> -- flag is commonly 1; tag one of 'issue', 'issuewild', 'iodef' (others reserved or not yet defined); value is a '<character-string>'"
+	IN	TXT	"Format: <flags> <tag> <value> -- flag is commonly 0; tag one of 'issue', 'issuewild', 'iodef' (others reserved or not yet defined); value is a '<character-string>'"
 	IN	TXT	"Indication of certificate authorities authorized to issue certificates for this domain. RFC6844 (2013)"
 
 cdnskey	IN	CDNSKEY	257 3 13 JErBf5lZ1osSWg7r51+4VfEiWIdONph0L70X0ToT7DkbikKQIp+qvuOOZri7j3qVComv7tgTIBhKxeDQercdKQ==
@@ -78,39 +78,75 @@ cds	IN	CDS	56039 13 2 4104805B43928FC573F0704A2C1B5A10BAA2878DE26B8535DDE77517C1
 	IN	TXT	"Format: <16-bit key tag> <8-bit algorithm> <8-bit digest type> <digest of owner name concatenated with the DNSKEY RDATA>"
 	IN	TXT	"Child Copy of DS record, for transfer to parent. RFC7344 (2014)"
 
+; The CERT record is a bit of a pain to construct.
+; The key tag is calculated by reading the certificate
+; pubkey and using the 'keytag' function from RFC4034,
+; Appendix B.1.:
+;  #include <stdio.h>
+;  #include <stdlib.h>
+;  #include <string.h>
+;
+;  #define MAX_KEY_SIZE 4096
+;
+;  unsigned int keytag(unsigned char key[], unsigned int keysize) {
+;    unsigned long ac;     /* assumed to be 32 bits or larger */
+;    int i;                /* loop index */
+;
+;    for (ac = 0, i = 0; i < keysize; ++i)
+;        ac += (i & 1) ? key[i] : key[i] << 8;
+;    ac += (ac >> 16) & 0xFFFF;
+;    return ac & 0xFFFF;
+;  }
+;
+;  int main() {
+;    unsigned char key[MAX_KEY_SIZE];
+;    unsigned int keysize = 0;
+;    int ch;
+;
+;    while ((ch = getchar()) != EOF && keysize < MAX_KEY_SIZE) {
+;        key[keysize++] = (unsigned char)ch;
+;    }
+;
+;    unsigned int tag = keytag(key, keysize);
+;    printf("Key tag: %u\n", tag);
+;  }
+; 
+; The algorithm is based on the certificate type per
+; https://www.iana.org/assignments/dns-sec-alg-numbers/dns-sec-alg-numbers.xhtml
+; The actual data includes the X.509 OID plus the DER
+; of the cert.
+; In this example, we have:
+; keytag = openssl x509 -in cert.pem -noout -pubkey | 
+;            openssl ec -pubin -outform DER |
+;            openssl dgst -sha256 -binary | ./keytag
+; algorithm = ECDSAP256SHA256 => 13
+; OID in DER (06)
+; length 10 (0A)
+; X509 server cert = 1.3.6.1.5.5.7.3.1
+; 
+; ( printf "\x06\x0A\x2B\x01\x05\x05\x07\x03\x01" ;
+;   openssl x509 -in cert.pem -outform DER ; ) | base64
 cert	IN	A	166.84.7.99
-	IN	AAAA	2001:470:30:84:e276:63ff:fe72:3900
-	IN	CERT	PKIX 12848 8 (
-				MIIFMzCCBBugAwIBAgISA5tDkCDwHTfvefYEFuzWCFaJMA0GCSqGSIb3DQEB
-				CwUAMDIxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQsw
-				CQYDVQQDEwJSMzAeFw0yMTA3MTAxMzU4NTdaFw0yMTEwMDgxMzU4NTZaMCIx
-				IDAeBgNVBAMTF2NlcnQuZG5zLm5ldG1laXN0ZXIub3JnMIIBIjANBgkqhkiG
-				9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsRUx03sAe4nYQtD/JeOUMec6XXRdoB2G
-				BcaSDHhrj0wo6IsqIezb3DEgw5VQTf7M2calzT0JYMK/qR/nMjNa8nP0uWa+
-				2MIO8q/FZSStOgJyYNrnrd94Enw6al1cyLHr+YrS1LzeH6LYUliQLaPNxh+w
-				O/VTNbUaVVjJn/GIJLSaO8X9HluzaXVQzSTQ+TpO5GzJMI4iLmNjbXC2yz+9
-				k/6JfqFqGSjEiyX8gSqoqkhA+Zaoo8jL9XRPOQ2mRzZFBvsKNKbOnqczEYsV
-				2F9qlrtdPEYRO30CRqzQSh59jHYxwA/J82UzYhR+Mb/+CyjMmFO33ejKrt7j
-				igaY2QnUDQIDAQABo4ICUTCCAk0wDgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQW
-				MBQGCCsGAQUFBwMBBggrBgEFBQcDAjAMBgNVHRMBAf8EAjAAMB0GA1UdDgQW
-				BBTP7F83NRGSnjNlvJHmBhQ86t07UDAfBgNVHSMEGDAWgBQULrMXt1hWy65Q
-				CUDmH6+dixTCxjBVBggrBgEFBQcBAQRJMEcwIQYIKwYBBQUHMAGGFWh0dHA6
-				Ly9yMy5vLmxlbmNyLm9yZzAiBggrBgEFBQcwAoYWaHR0cDovL3IzLmkubGVu
-				Y3Iub3JnLzAiBgNVHREEGzAZghdjZXJ0LmRucy5uZXRtZWlzdGVyLm9yZzBM
-				BgNVHSAERTBDMAgGBmeBDAECATA3BgsrBgEEAYLfEwEBATAoMCYGCCsGAQUF
-				BwIBFhpodHRwOi8vY3BzLmxldHNlbmNyeXB0Lm9yZzCCAQMGCisGAQQB1nkC
-				BAIEgfQEgfEA7wB1APZclC/RdzAiFFQYCDCUVo7jTRMZM7/fDC8gC8xO8WTj
-				AAABepDtu84AAAQDAEYwRAIgWuXt34lCw2aZSX1xBk2AmCw/qPkQpQFE1zzH
-				z60GIJwCIDyZTY4HAbOaPt0fCpPz1uus0GZW5dzYyXNERwnbZgupAHYAb1N2
-				rDHwMRnYmQCkURX/dxUcEdkCwQApBo2yCJo32RMAAAF6kO278gAABAMARzBF
-				AiEAi1oLYsinzNPz6XctBEUhNgOWrrxBOf9ad4Dk7IhoX24CIFT/vUVtSvf4
-				P9Kzr+rcxotNw96g+TR82Iw6iXykhFP4MA0GCSqGSIb3DQEBCwUAA4IBAQBu
-				2dw3AbDN8vwrHNdTnPMGZeT32vtDtqRSGC4/hjwUWGgkm94Nd1HvzA/vLkjI
-				K4vIqWYIR3REQEbyMJTH/eOIE0dvbvZdDgA6zjhe3TeRK2K10+b6W0X3wF0v
-				gVKLLIRYOuYXPnly2G2a2k23faDWzvpQMT2Zo6KHeATu1wxDTnZCpa0zGTRq
-				Pn+3c8v1h8A4H01lmlsCfgobtlzVvp7s2KESXJgJ1LZ1rR4Kc8Ip/V1MPPPS
-				elBFZ715492iqIJpR9iPPIhhaiMWlvDV46Fia22la0im/nvFrnQ9exW3T0Yk
-				DYGnIE8EewBAJjkBHoxg5CNK5Rj2aPAwNZvWbkXp
+	IN	AAAA    2602:f977:800:0:e276:63ff:fe72:3900
+	IN	CERT	PKIX 24753 13 (
+			BgorAQUFBwMBMIID8jCCA3igAwIBAgISA+Xn2xmfe1mwordqibd8h6qoMAoGCCqGSM49BAMDMDIx
+			CzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQswCQYDVQQDEwJFNTAeFw0yNDEw
+			MTYwMTIzMzZaFw0yNTAxMTQwMTIzMzVaMBkxFzAVBgNVBAMTDm5ldG1laXN0ZXIub3JnMFkwEwYH
+			KoZIzj0CAQYIKoZIzj0DAQcDQgAEUd81nZXCa/79Joc30jt8VpbRE2sfRt5zg/nLbnm78oObHeJT
+			Cnr7mkhNNmN1BfsMr/dsmBo47bpxXTPnWTAP7qOCAoUwggKBMA4GA1UdDwEB/wQEAwIHgDAdBgNV
+			HSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQU2w1POKUp
+			Lil1R7hGZz2XOuLxNQEwHwYDVR0jBBgwFoAUnytfzzwhT50Et+0rLMTGcIvS1w0wVQYIKwYBBQUH
+			AQEESTBHMCEGCCsGAQUFBzABhhVodHRwOi8vZTUuby5sZW5jci5vcmcwIgYIKwYBBQUHMAKGFmh0
+			dHA6Ly9lNS5pLmxlbmNyLm9yZy8wgY0GA1UdEQSBhTCBgoIZaHR0cHMudGVzdC5uZXRtZWlzdGVy
+			Lm9yZ4ITbWFpbC5uZXRtZWlzdGVyLm9yZ4IWbXRhLXN0cy5uZXRtZWlzdGVyLm9yZ4IObmV0bWVp
+			c3Rlci5vcmeCFHBhbml4Lm5ldG1laXN0ZXIub3JnghJ3d3cubmV0bWVpc3Rlci5vcmcwEwYDVR0g
+			BAwwCjAIBgZngQwBAgEwggEEBgorBgEEAdZ5AgQCBIH1BIHyAPAAdwDPEVbu1S58r/OHW9lpLpvp
+			GnFnSrAX7KwB0lt3zsw7CAAAAZKTIeqQAAAEAwBIMEYCIQD01SNrY7TCLowbYRsXS1lGU53DAFsB
+			q5xvoYc6/ohc1QIhAPSVVdXSUs31RVDcoOPTA6ttzsQp5u8gryr1INRZv0PBAHUAE0rfGrWYQgl4
+			DG/vTHqRpBa3I0nOWFdq367ap8Kr4CIAAAGSkyHrDAAABAMARjBEAiAhKJRr39UrzsrOM+j2m8BF
+			rd8SHMM0/TXRyDGb2rFQGwIgSCOYc3EIpuqqec/zngQHLVJ49tl6Bjgzo8rqyAY/JRowCgYIKoZI
+			zj0EAwMDaAAwZQIxANAsPjni8bpq6Hu5iVi0QJmKMvMPnaGLCecSK77eL0olcUST6rkCnsGLkEEO
+			4SQlHgIwWswNIVe2eG/lVNoPvpsdWZyWKqj6o6isP0QsiN+bG3iFcr04Mrd+zjYWQ42xgR3j
 			)
 	IN	CERT	IPGP 0 0 99CE1DC7770AC5A809A60DCD66CE4FE96F6BD3D7
 	IN	CERT	PGP 0 0 (
@@ -313,18 +349,13 @@ hip	IN	HIP	(	2					; RSA
 	IN	TXT	"Host Identity Protocol mappings of Host Identities and Host Identity Tags to IP addresses. RFC5205 (2008); RFC8005 (2016)"
 
 ; Commonly used with a _port._scheme name, e.g., _8443._foo => foo://:8443
-; Not yet supported in bind, but see e.g.,
-; https://ypcs.fi/howto/2020/09/30/announce-https-via-dns/
 ; ServiceForm
-;https IN	HTTPS	1 . (
-;				alpn="h3,h2"
-;				ipv6hint="2001:470:30:84:e276:63ff:fe72:3900"
-;				port="8080"
-;				echconfig="ZW5jcnlwdGVkIGNsaWVudCBoZWxsbwo=" )
-https	IN	TYPE65 \# 123 2d6e2031202e20616c706e3d2268332c683222206970763668696e743d22323030313a3437303a33303a38343a653237363a363366663a666537323a333930302220706f72743d22383038302220656368636f6e6669673d225a57356a636e6c776447566b49474e73615756756443426f5a57787362776f3d220a
+https IN	HTTPS	1 . (
+				alpn="h2,http/1.1"
+                                ipv6hint="2602:f977:800:0:e276:63ff:fe72:3900"
+                                ipv4hint="166.84.7.99" )
 ; AliasForm
-;	IN	HTTPS	0 www.netmeister.org.
-	IN	TYPE65 \# 25 2d6e2030207777772e6e65746d6569737465722e6f72672e0a
+	IN	HTTPS	0 www.netmeister.org.
 	IN	TXT	"Format: <16-bit SvcFieldPriority> <SvcDomainName> <SvcFieldValue>"
 	IN	TXT	"SVCB variation specifically for HTTP/HTTPS. IETF Draft (2020)"
 
@@ -465,8 +496,7 @@ sshfp	IN	SSHFP	1 1 53A76D5284C91E140DEC9AD1A757DA123B95B081
 ; Not yet supported in bind, but see e.g.,
 ; https://ypcs.fi/howto/2020/09/30/announce-https-via-dns/
 ; ServiceForm
-;svcb	IN	SVCB	1 panix.netmeister.org. ipv6hint="2001:470:30:84:e276:63ff:fe72:3900" port="8888"
-svcb	IN	TYPE64 \# 85 2d6e20312070616e69782e6e65746d6569737465722e6f72672e206970763668696e743d22323030313a3437303a33303a38343a653237363a363366663a666537323a333930302220706f72743d2238383838220a
+svcb	IN	SVCB	1 panix.netmeister.org. ipv6hint="2602:f977:800:0:e276:63ff:fe72:3900" port="8888"
 	IN	TXT	"Format: <16-bit SvcFieldPriority> <SvcDomainName> <SvcFieldValue>"
 	IN	TXT	"General Purpose Service Binding. IETF Draft (2020)"
 
@@ -507,7 +537,7 @@ zonemd	IN	DS	7645 13 2 EB032BCDA4F0333AEEE9484C2A07B5EA0F52BD85319E1AB9C0D933050
 
 ; --- Obsolete, ancient, or largely unused RRs ---
 
-a6	IN	A6	0 2001:470:30:84:e276:63ff:fe72:3900
+a6	IN	A6	0 2602:f977:800:0:e276:63ff:fe72:3900
 	IN	A6	64 ::e276:63ff:fe72:3900 a6-prefix
 	IN	TXT	"Format: <8-bit prefix> <128-bit hex IPv6 address> <prefix-name>"
 	IN	TXT	"Early IPv6 record, obsoleted by AAAA. RFC2874 (2000)"
@@ -515,7 +545,7 @@ a6	IN	A6	0 2001:470:30:84:e276:63ff:fe72:3900
 ; used to supplement the second prefix example of the above a6 record
 a6-prefix	IN	A6	0 2001:470:30:84::
 
-amtrelay	IN	AMTRELAY	10 0 2 2001:470:30:84:e276:63ff:fe72:3900
+amtrelay	IN	AMTRELAY	10 0 2 2602:f977:800:0:e276:63ff:fe72:3900
 	IN	TXT	"Format: <8-bit precedence> <1-bit discover> <7-bit type> <domain-name>"
 	IN	TXT	"Automatic Multicast Tunneling Relay. RFC8777 (2020)"
 
