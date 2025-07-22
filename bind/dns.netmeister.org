@@ -72,7 +72,7 @@ caa	IN	CAA	0 issue ";"
 
 cdnskey	IN	CDNSKEY	257 3 13 JErBf5lZ1osSWg7r51+4VfEiWIdONph0L70X0ToT7DkbikKQIp+qvuOOZri7j3qVComv7tgTIBhKxeDQercdKQ==
 	IN	TXT	"Format: <16-bit flags> <8-bit protocol> <8-bit algorithm> <base64-encoded pubkey>"
-	IN	TXT	"Child Copy of DSNKEY record, for transfer to parent. RFC7344 (2014)"
+	IN	TXT	"Child Copy of DNSKEY record, for transfer to parent. RFC7344 (2014)"
 
 cds	IN	CDS	56039 13 2 4104805B43928FC573F0704A2C1B5A10BAA2878DE26B8535DDE77517C154CE9F
 	IN	TXT	"Format: <16-bit key tag> <8-bit algorithm> <8-bit digest type> <digest of owner name concatenated with the DNSKEY RDATA>"
